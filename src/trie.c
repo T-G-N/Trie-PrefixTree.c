@@ -137,3 +137,47 @@ char** trie_get(trie* trie, char* _word, size_t* stringSize){
     return words;
 
 }
+
+void _trie_clear_rec(node* node){
+
+    for(uint8_t i = 0; i < node->nodeSize; i++){
+        _trie_clear_rec(node->nodes[i]);
+        free(node->nodes[i]);
+    }
+    node->nodeSize = 0;
+    
+}
+
+void trie_clear(trie* trie){
+    _trie_clear_rec( trie->root );
+}
+
+void trie_delete(trie* trie){
+    trie_clear(trie);
+    free(trie->root);
+}
+
+bool _trie_remove_rec(node* node, char* word ){
+    
+    if(node->nodeSize == 0 && *word != '\0'){
+        return false;
+    }
+
+    if(*word == '\0') return true;
+
+    for(uint8_t i = 0; i < node->nodeSize; i++){
+        if(node->nodes[i]->letter == *word){
+            if( _trie_remove_rec(node->nodes[i],++word) ){
+                if(node->useCount > 1) node->useCount--;
+                else _trie_clear_rec(node);
+                return true;
+            }
+        }else return false;
+    }
+
+    return false;
+}
+
+void trie_remove(trie* trie, char* word){
+    _trie_remove_rec(trie->root,word);
+}

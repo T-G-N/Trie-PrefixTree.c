@@ -10,6 +10,10 @@ void getWords(trie* newTrie, char word[64]){
     for(int i = 0; i < arrSize; i++){
         printf("%s[%s]\n",word,words[i]);
     }
+
+    if(arrSize == 0){
+        printf("Found 0 AutoCompletion.\n");
+    }
 }
 
 int main(void){
@@ -21,12 +25,17 @@ int main(void){
     trie_add(newTrie,"whaa!");
     trie_add(newTrie,"whooray");
     trie_add(newTrie,"whatYouNeed");
+    trie_clear(newTrie);
 
     trie_add(newTrie,"helloWorld");
     trie_add(newTrie,"helloManoj");
     trie_add(newTrie,"helloTGN");
     trie_add(newTrie,"helo");
 
+    trie_remove(newTrie,"helo");
+
+    system("cls");
+    printf("Start Typing...");
     
     char input = 0;
     char str[32*2] = "";
@@ -36,6 +45,7 @@ int main(void){
         if (kbhit()) {
             
             input = getch();
+            if(input == '\b' && index == 0) continue;
 
             if(input == '\n' || input == 27){ //27 - ESC
                 break;
