@@ -1,6 +1,15 @@
 CC = gcc
-BINS = test
+BINS = _test clean
 
-test:
-	$(CC) -o build/trie.exe test/unitTest.c src/trie.c
+trie:
+	$(CC) -o build/trie.o -c src/trie.c
 
+_test: trie
+	$(CC) -o build/trie.exe test/unitTest.c build/trie.o
+
+example: trie
+	$(CC) -o build/example.exe test/example.c build/trie.o
+	./build/example.exe
+
+clean:
+	rm -f build/*.o
